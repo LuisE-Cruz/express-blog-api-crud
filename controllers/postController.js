@@ -1,5 +1,4 @@
 const blogPosts = require("../data/blogPosts")
-const { post } = require("../routers/posts")
 
 function index(req, res) {
     const id = parseInt(req.params.id)
@@ -12,7 +11,21 @@ function show(req, res) {
 }
 
 function store(req, res) {
-    res.send('Creazione nuovo post');
+    const newId = blogPosts[blogPosts.length - 1].id + 1;
+
+    const newPost = {
+        id: newId,
+        title: req.body.title,
+        content: req.body.content,
+        image: req.body.image,
+        tags: req.body.tags
+    };
+
+    blogPosts.push(newPost);
+
+    res.status(201);
+    res.json(newPost)
+
 }
 
 function update(req, res) {
