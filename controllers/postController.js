@@ -24,7 +24,17 @@ function modify(req, res) {
 }
 
 function destroy(req, res) {
-    res.send('Eliminazione del post ' + req.params.id);
+    const id = parseInt(req.params.id)
+    if (Number.isNaN(id)) {
+        return res.status(404).json({ error: 'Post non trovato' })
+    }
+    const index = blogPosts.findIndex(p => p.id === id)
+    if (index === -1) {
+        return res.status(404).json({ error: 'Post non trovato' })
+    }
+    blogPosts.splice(index, 1)
+    console.log('Lista post aggiornata:', blogPosts)
+    return res.status(204).send()
 }
 
 module.exports = {
