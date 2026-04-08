@@ -1,13 +1,27 @@
 const blogPosts = require("../data/blogPosts")
 
 function index(req, res) {
-    const id = parseInt(req.params.id)
-    const post = blogPosts.filter(post => post.id === id)
-    res.json(post)
+
+    const objectPosts = {
+        postsNumber: blogPosts.length,
+        posts: blogPosts
+    }
+    res.json(objectPosts)
 }
 
 function show(req, res) {
-    res.json(blogPosts)
+    const postId = blogPosts.find(post =>
+        post.id === parseInt(req.params.id));
+
+    if (!postId) {
+        res.status(404);
+        return res.json({
+            error: "404 Not Found",
+            message: "post non trovato"
+        })
+    }
+
+    res.json(postId);
 }
 
 function store(req, res) {
@@ -29,7 +43,26 @@ function store(req, res) {
 }
 
 function update(req, res) {
-    res.send('Modifica tutto del id' + req.params.id);
+
+    const id = parseInt(req.params.id)
+    const post = blogPosts.find(post => post.id === id);
+
+    if (!post) {
+        res.status(404);
+
+        return res.json({
+            error: "Not Found",
+            message: "Post non trovato"
+        })
+    }
+    post.title = req.body.title;
+    post.content = req.body.content;
+    post.image = req.body.image;
+    post.tags = req.body.tags;
+
+    console.log('Lista post aggiornata:', blogPosts)
+
+    res.json(post);
 }
 
 function modify(req, res) {
